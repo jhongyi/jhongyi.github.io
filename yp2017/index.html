@@ -1,0 +1,106 @@
+<html>
+
+<head>
+    <title>list s3 photo</title>
+    <script src="http://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <fieldset>
+        <legend>取得 Mask 統計</legend>
+        <button id="maskBtn" type="button" onClick="getMask()">取得 Mask</button>
+        <div id="maskContent"></div>
+    </fieldset>
+    <br />
+    <fieldset>
+        <legend>取得註冊與照片統計</legend>
+        <table>
+            <tr>
+                <td>
+                    <button id="registerBtn" type="button" onClick="getRegister()">取得註冊人數</button>
+                </td>
+                <td>
+                    <button id="selfieBtn" type="button" onClick="getSelfie()">取得照片總數</button>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: center">
+                    <div id="registerContent"></div>
+                </td>
+                <td style="text-align: center">
+                    <div id="selfieContent"></div>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    <input id="authToken" type="hidden" value="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhZG1pbiIsInJvbGVJZCI6ImdlbmVyYWwiLCJpYXQiOjE1MTQ4Nzg0ODN9.OJ-eEQ2v0cG22fzZnyRdY1ZaGvdJhfW9DdD88ilBXDk" />
+    <script type="text/javascript">
+        function getMask() {
+            $.ajax({
+                type: "GET",
+                headers: {
+                    "Authorization": $('#authToken').val()
+                },
+                url: "https://yp2017.trialpack.net/selfies/mask",
+                success: function (result) {
+                    result = result.message;
+                    var content = [];
+                    for (var i = 0; i < result.length; i++) {
+                        var name = "";
+                        switch (result[i].mask) {
+                            case 1:
+                                name = "緯創夜行俠";
+                                break;
+                            case 2:
+                                name = "緯創獵鷹";
+                                break;
+                            case 3:
+                                name = "緯創超人";
+                                break;
+                            case 4:
+                                name = "緯創戰警";
+                                break;
+                            case 5:
+                                name = "緯創隊長";
+                                break;
+                            case 6:
+                                name = "緯創雷神";
+                                break;
+                            default:
+                                name = "緯創夜行俠";
+                        }
+                        content += "<span>" + "mask: " + result[i].mask + ", name: " + name + ", total: " + result[i].total + "</span>";
+                        content += "<br />";
+                    }
+                    $('#maskContent').html(content);
+                }
+            })
+        }
+        function getRegister() {
+            $.ajax({
+                type: "GET",
+                headers: {
+                    "Authorization": $('#authToken').val()
+                },
+                url: "https://yp2017.trialpack.net/users/statistics",
+                success: function (result) {
+                    $('#registerContent').html("<span>" + result.message + "</span>");
+                }
+            })
+        }
+        function getSelfie() {
+            $.ajax({
+                type: "GET",
+                headers: {
+                    "Authorization": $('#authToken').val()
+                },
+                url: "https://yp2017.trialpack.net/selfies/statistics",
+                success: function (result) {
+                    $('#selfieContent').html("<span>" + result.message + "</span>");
+                }
+            })
+        }
+    </script>
+</body>
+
+</html>
